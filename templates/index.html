@@ -1,11 +1,20 @@
-<!doctype html>
-<html>
-  <head><title>Hello</title></head>
-  <body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Stream</title>
+</head>
+<body>
     <h1>Hello, {{ name }}!</h1>
-    <form method="post">
-      名前を入力してください：<input type="text" name="name">
-      <input type="submit" value="送信">
+    
+    <form method="POST">
+        <label for="name">Enter your name:</label>
+        <input type="text" name="name" id="name">
+        <button type="submit">Submit</button>
     </form>
-  </body>
+    
+    <h2>Webcam Stream</h2>
+    <img src="{{ url_for('video_feed') }}" width="640" height="480"> <!-- ストリームを表示するためのimgタグ -->
+</body>
 </html>
