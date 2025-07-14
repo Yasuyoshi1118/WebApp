@@ -3,12 +3,21 @@ import cv2
 
 app = Flask(__name__)
 
-# カメラのキャプチャを開始
-camera = cv2.VideoCapture(0)
+# IPカメラのストリームURLを指定
+# 例: rtsp://username:password@ip_address:port/path
+#IP_CAMERA_URL = "rtsp://admin:Admin12345@192.168.3.89:32014/stream2"  # ここにIPカメラのURLを入力します
+#IP_CAMERA_URL = "http://192.168.3.89:554/video"  # ここにIPカメラのURLを入力します
+IP_CAMERA_URL = "rtsp://239.192.0.89:37004/h264"  # ここにIPカメラのURLを入力します
+
+
+#rtsp://username:password@<camera_ip>:<port>/path
+#http://<camera_ip>:<port>/video
 
 def generate_frames():
+    # IPカメラの映像を取得
+    cap = cv2.VideoCapture(IP_CAMERA_URL)
     while True:
-        success, frame = camera.read()  # カメラからフレームを取得
+        success, frame = cap.read()  # カメラからフレームを取得
         if not success:
             break
         else:
@@ -28,4 +37,4 @@ def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, ssl_context=('cert.pem', 'key.pem'))
+    app.run(host="0.0.0.0", port=5050, ssl_context=('cert.pem', 'key.pem'))
