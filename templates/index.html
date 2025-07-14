@@ -1,11 +1,29 @@
-<!doctype html>
-<html>
-  <head><title>Hello</title></head>
-  <body>
-    <h1>Hello, {{ name }}!</h1>
-    <form method="post">
-      名前を入力してください：<input type="text" name="name">
-      <input type="submit" value="送信">
-    </form>
-  </body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>TCP受信メッセージ（PORT:6000で受信）</title>
+</head>
+<body>
+  <h1>受信メッセージ一覧</h1>
+  <div id="messages"></div>
+
+  <script>
+    async function fetchMessages() {
+      const res = await fetch("/messages");
+      const messages = await res.json();
+      const container = document.getElementById("messages");
+      container.innerHTML = ""; // 一度クリア
+      messages.forEach(msg => {
+        const p = document.createElement("p");
+        p.textContent = msg;
+        container.appendChild(p);
+      });
+    }
+
+    // 1秒ごとにメッセージ取得
+    setInterval(fetchMessages, 1000);
+    fetchMessages(); // 初回即実行
+  </script>
+</body>
 </html>
