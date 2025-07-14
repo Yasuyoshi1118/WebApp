@@ -1,6 +1,0 @@
-OpenSSLのインストール（ver. 3.*.*）
-
-openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
-
-※365日有効の証明書を発行
-※ホスト名に対応した証明書が発行される
