@@ -1,11 +1,40 @@
-<!doctype html>
-<html>
-  <head><title>Hello</title></head>
-  <body>
-    <h1>Hello, {{ name }}!</h1>
-    <form method="post">
-      名前を入力してください：<input type="text" name="name">
-      <input type="submit" value="送信">
-    </form>
-  </body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Stream</title>
+    <link rel="icon" href="{{ url_for('static', filename='telemotion.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+          async function takeScreenshot() {
+              const response = await fetch('/screenshot', { method: 'POST' });
+              const imagePath = await response.text();
+              const img = document.getElementById('screenshot');
+              img.src = imagePath; // 画像のパスを設定
+              img.style.display = 'block'; // 画像を表示
+          }
+      </script>
+</head>
+
+<body>
+    <div class="header">
+    <a href="/system">システム System</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/setting">設定 Setting</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/index">情報 Information</a>
+    <hr>
+    </div>
+	<br>
+    <h2>Take a Screenshot</h2>
+    <button onclick="takeScreenshot()">Take Screenshot</button>
+    <h2>Screenshot</h2>
+    <img id="screenshot" src="" alt="Screenshot will appear here" style="display:none; max-width: 640px;"/>
+
+
+
+    <h2>Webcam Stream</h2>
+    <img src="{{ url_for('video_feed') }}" width="640" height="480"> <!-- ストリームを表示するためのimgタグ -->
+</body>
 </html>

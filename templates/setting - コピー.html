@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webcam Stream</title>
+    <link rel="icon" href="{{ url_for('static', filename='telemotion_black.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="header">
+    <a href="/system">システム System</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/setting">設定 Setting</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/index">情報 Information</a>
+    <hr>
+    </div>
+	<br>
+
+    <h2>現在のサイクル設定 Current Cycle Setting</h2>
+    <h3></h3>
+    <table style="width: 95%">
+        <tr>
+            <th style="width:25%">名前<br>Description</th>
+            <th style="width:35%">Current Value</th>
+            <th style="width:45%">設定<br>Setting</th>
+        </tr>
+
+        <tr>
+            <td>色<br>Color</td>
+            <td id="string_table_setting-0"></td>
+            <td>
+                <input type="text" id="color_r" style="width:50px;height:18px;" placeholder="R">
+                <input type="text" id="color_g" style="width:50px;height:18px;" placeholder="G">
+                <input type="text" id="color_b" style="width:50px;height:18px;" placeholder="B">
+                <button onclick="enter_setting_3('color_r','color_g','color_b')" style="width:50px;height:24px;">Enter</button>
+            </td>
+        </tr>
+
+    </table>
+    <h2>次のサイクル設定 Next Cycle Setting</h2>
+    <h3></h3>
+    <table style="width: 95%">
+        <tr>
+            <th style="width:25%">Description</th>
+            <th style="width:35%">Current Value</th>
+            <th style="width:45%">Setting</th>
+        </tr>
+        <tr>
+            <td>スタートX位置(ポジション)<br>Start X Position</td>
+            <td id="string_table_setting-1"></td>
+            <td>
+                <input type="text" id="start_x" style="width:50px;height:18px;">
+            </td>
+        </tr>
+        <tr>
+            <td>スタートY位置(ポジション)<br>Start X Position</td>
+            <td id="string_table_setting-2"></td>
+            <td>
+                <input type="text" id="start_y" style="width:50px;height:18px;">
+            </td>
+        </tr>
+        <tr>
+            <td>スタートヨー角<br>Start Yaw Angle</td>
+            <td id="string_table_setting-3"></td>
+            <td>
+                <input type="text" id="start_yaw" style="width:50px;height:18px;">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">Update All</td>
+            <td>
+                <button onclick="enter_setting_3('start_x','start_y','start_yaw')" style="width:50px;height:24px;">Enter</button>
+            </td>
+        </tr>
+    </table>
+
+
+    <script>
+
+        function fetchData() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    data.table_setting.forEach((val, index) => {
+                        document.getElementById('string_table_setting-' + index).innerText = val;
+                    });
+
+
+
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        function enter_setting(id) {
+            const inputBox = document.getElementById(id);
+            const inputValue = inputBox.value;
+
+            fetch('/enter/setting/' + id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: inputValue })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === '0') {
+                    inputBox.style.backgroundColor = 'rgb(0,255,0)';
+                } else {
+                    inputBox.style.backgroundColor = 'rgb(255,0,0)';
+                }
+                setTimeout(() => {
+                    inputBox.style.backgroundColor = 'rgb(255,255,255)';
+                }, 1500);
+            })
+            .catch(error => console.error('Error',error));
+        }
+
+        function enter_setting_3(id1,id2,id3) {
+            enter_setting(id1)
+            enter_setting(id2)
+            enter_setting(id3)
+        }
+
+        fetchData();
+        setInterval(fetchData, 500);
+    </script>
+</body>

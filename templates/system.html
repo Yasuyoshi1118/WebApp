@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webcam Stream</title>
+    <link rel="icon" href="{{ url_for('static', filename='telemotion.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="header">
+    <a href="/system">システム System</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/setting">設定 Setting</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/index">情報 Information</a>
+    <hr>
+    </div>
+	<br>
+    <h2>システム情報</h2>
+    <br>
+    <table style="width: 40%">
+        <tr>
+            <th style="width:67%">Description</th>
+            <th style="width:33%">Current Value</th>
+        </tr>
+        <tr>
+            <td>Heartbeat</td>
+            <td id="string_html_dynamic_system-0">****</td>
+        </tr>
+        <tr>
+            <td>CPU Usage (%)</td>
+            <td id="string_html_dynamic_system-1">****</td>
+        </tr>
+        <tr>
+            <td>Memory Usage (%)</td>
+            <td id="string_html_dynamic_system-2">****</td>
+        </tr>
+        <tr>
+            <td>Temperature (°C)</td>
+            <td id="string_html_dynamic_system-3">****</td>
+        </tr>
+        <tr>
+            <td>Power Supply</td>
+            <td id="string_html_dynamic_system-4">****</td>
+        </tr>
+    </table>
+    <h3>version : {{ version }}</h3>
+    <script>
+        function fetchData() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(data => {
+                    data.html_dynamic_system.forEach((val, index) => {
+                        document.getElementById('string_html_dynamic_system-' + index).innerText = val;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+        fetchData();
+        setInterval(fetchData, 500);
+    </script>
+</body>
